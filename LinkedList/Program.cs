@@ -17,7 +17,7 @@ namespace LinkedList
                 {
                     tail.Next = newNode;
                     newNode.Previous = tail;
-                    tail = newNode; 
+                    tail = newNode;
                 }
 
             }
@@ -73,8 +73,8 @@ namespace LinkedList
             }
         }
         public static class Services { 
-            public static int Choice { get; set; }
-            public static void Output()
+            
+            public static int Output()
             {
                 Console.WriteLine("Введите 0 - чтобы заполнить список 5-ю слуйчайными эллементами");
                 Console.WriteLine("Введите 1 - чтобы вевести список");
@@ -84,7 +84,7 @@ namespace LinkedList
                 Console.WriteLine("Введите 5 - чтобы закрыть программу");
 
                 int choice = Convert.ToInt32(Console.Read());
-                Choice = choice;
+                return choice;
             }
            
         }
@@ -105,27 +105,42 @@ namespace LinkedList
             bool UICycle = true;
             bool Cycle = true;
             DoublyLinkedList list = new DoublyLinkedList();
-            Services.Output();
+            int Choice = Services.Output();
             while (UICycle == true)
             {
 
 
-                switch (Services.Choice)
+                switch (Choice)
                 {
                     case 0:
+                        Console.WriteLine("Начинаю генерацию...");
                         Random rng = new Random();
                         for (int i = 0; i < 5; i++)
                         {
-                            list.AddLast(rng.Next(1, 100));
+                            int num = rng.Next(1, 100);
+                            Console.WriteLine($"Добавляю число: {num}");
+                            list.AddLast(num);
+                            Console.WriteLine("Успешно добавлено.");
                         }
-                        Console.WriteLine("5 случайных чисел добавлены в список.");
+                        Console.WriteLine("Генерация завершена! Нажми ENTER, чтобы вернуться в меню.");
+                        Console.ReadLine();
                         break;
-
                     case 1:
-                        Console.WriteLine("1 - С начала, 2 - С конца");
-                        string choice1 = Console.ReadLine();
-                        if (choice1 == "1") list.PrintForward();
-                        else if (choice1 == "2") list.PrintBackward();
+                        Console.WriteLine("Введите 1 для прохода с начала или 2 для прохода с конца");
+                        string subChoice = Console.ReadLine(); 
+
+                        if (subChoice == "1")
+                        {
+                            list.PrintForward();
+                        }
+                        else if (subChoice == "2")
+                        {
+                            list.PrintBackward();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Неверное число, попробуйте снова");
+                        }
                         break;
                     case 2:
                         Console.WriteLine("Вы выбрали 2");
