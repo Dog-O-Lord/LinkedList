@@ -12,7 +12,10 @@ namespace LinkedList
             public void AddLast(int data)
             {
                 Node newNode = new Node(data);
-                if (head == null) { head = tail = newNode; }
+                if (head == null)
+                {
+                    head = tail = newNode;
+                }
                 else
                 {
                     tail.Next = newNode;
@@ -41,8 +44,11 @@ namespace LinkedList
                 Node current = head;
                 while (current != null)
                 {
-                    if (current.Data == value) return current;
-                    current = current.Next;
+                    if (current.Data == value) 
+                    {
+                        return current; 
+                    }
+                    current = current.Next; 
                 }
                 return null;
             }
@@ -55,26 +61,33 @@ namespace LinkedList
                 newNode.Next = target.Next;
                 newNode.Previous = target;
 
-                if (target.Next != null) target.Next.Previous = newNode;
-                else tail = newNode; 
+                if (target.Next != null)
+                    target.Next.Previous = newNode;
+                else
+                    tail = newNode; 
 
                 target.Next = newNode;
             }
 
-            public void Remove(Node target)
+            public void Remove(int value)
             {
+                Node target = Find(value);
                 if (target == null) return;
 
-                if (target.Previous != null) target.Previous.Next = target.Next;
-                else head = target.Next; 
+                if (target.Previous != null)
+                    target.Previous.Next = target.Next;
+                else
+                    head = target.Next; // Если удаляем голову
 
-                if (target.Next != null) target.Next.Previous = target.Previous;
-                else tail = target.Previous; 
+                if (target.Next != null)
+                    target.Next.Previous = target.Previous;
+                else
+                    tail = target.Previous;
             }
         }
         public static class Services { 
             
-            public static int Output()
+            public static string Output()
             {
                 Console.WriteLine("Введите 0 - чтобы заполнить список 5-ю слуйчайными эллементами");
                 Console.WriteLine("Введите 1 - чтобы вевести список");
@@ -83,14 +96,14 @@ namespace LinkedList
                 Console.WriteLine("Введите 4 - чтобы удалить эллемент");
                 Console.WriteLine("Введите 5 - чтобы закрыть программу");
 
-                int choice = Convert.ToInt32(Console.Read());
+                string choice = Console.ReadLine();
                 return choice;
             }
            
         }
         public class Node
         {
-            public int Data { get; set; }
+            public int Data;
             public Node Next;
             public Node Previous; 
             public Node(int data)
@@ -102,77 +115,119 @@ namespace LinkedList
         static void Main(string[] args)
         {
 
-            bool UICycle = true;
-            bool Cycle = true;
+         
             DoublyLinkedList list = new DoublyLinkedList();
-            int Choice = Services.Output();
-            while (UICycle == true)
+            bool cycle = true;
+            while (cycle == true)
             {
+                string input = Services.Output();
 
-
-                switch (Choice)
+                switch (input)
                 {
-                    case 0:
-                        Console.WriteLine("Начинаю генерацию...");
+                    case "0":
+                        Console.WriteLine("\nНачинаю генерацию...");
                         Random rng = new Random();
                         for (int i = 0; i < 5; i++)
                         {
                             int num = rng.Next(1, 100);
-                            Console.WriteLine($"Добавляю число: {num}");
                             list.AddLast(num);
-                            Console.WriteLine("Успешно добавлено.");
+                            Console.WriteLine($"Добавлено число: {num}");
                         }
-                        Console.WriteLine("Генерация завершена! Нажми ENTER, чтобы вернуться в меню.");
+                        Console.WriteLine("Готово! Нажми Enter для продолжения...");
                         Console.ReadLine();
                         break;
-                    case 1:
-                        Console.WriteLine("Введите 1 для прохода с начала или 2 для прохода с конца");
-                        string subChoice = Console.ReadLine(); 
 
-                        if (subChoice == "1")
+                    case "1":
+                        Console.WriteLine("\nВведите 1 для прохода с начала, 2 - с конца:");
+                        string subInput = Console.ReadLine();
+
+                        Console.WriteLine("\n--- Ваш список ---");
+                        if (subInput == "1")
                         {
                             list.PrintForward();
                         }
-                        else if (subChoice == "2")
+                        else if (subInput == "2")
                         {
                             list.PrintBackward();
                         }
                         else
                         {
-                            Console.WriteLine("Неверное число, попробуйте снова");
+                            Console.WriteLine("Неверный выбор направления.");
                         }
+
+                        Console.WriteLine("------------------");
+                        Console.WriteLine("Нажми Enter для продолжения...");
+                        Console.ReadLine();
                         break;
-                    case 2:
+                    case "2":
                         Console.WriteLine("Вы выбрали 2");
-                        Console.WriteLine("/n Введжите число для поиска в диапазоне от 1 д 100");
-                        int value = Convert.ToInt32(Console.Read());
-                        if ((value >= 1) && (value <= 100))
+                        Console.WriteLine("Введжите число для поиска в диапазоне от 1 д 100");
+                        if (int.TryParse(Console.ReadLine(), out int searchNum))
                         {
-                            if (list.Find(value) != null ) Console.WriteLine("Число найдено в списке");
-                            else Console.WriteLine("Число не найдено в списке");
+                            Node foundNode = list.Find(searchNum);
+
+                            if (foundNode != null)
+                            {
+                                Console.WriteLine($"Успех! Число {searchNum} НАЙДЕНО в списке.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Число не найдено в списке.");
+                            }
                         }
-                        else Console.WriteLine("Неверное число, попробуйте снова");
+                        else
+                        {
+                            Console.WriteLine("Ошибка: вы ввели не число.");
+                        }
                         break;
-                    case 3:
+                    case "3":
                         Console.WriteLine("Вы выбрали 3");
                         Console.WriteLine("Введите число после которого хотите добавить новый элемент");
-                        int targetValue = Convert.ToInt32(Console.Read());
-                        list.InsertAfter(list.Find(targetValue), targetValue + 1);
-                        Console.WriteLine(list.Find(targetValue).Data + " добавлено после " + targetValue);
+                        if (int.TryParse(Console.ReadLine(), out int targetValue))
+                        {
+                            Node targetNode = list.Find(targetValue);
+
+                            if (targetNode != null)
+                            {
+                                Console.Write("Введите значение нового элемента: ");
+                                if (int.TryParse(Console.ReadLine(), out int newValue))
+                                {
+                                    list.InsertAfter(targetNode, newValue);
+                                    Console.WriteLine($"Элемент {newValue} успешно добавлен после {targetValue}.");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Ошибка: Число {targetValue} не найдено в списке. Некуда вставлять.");
+                            }
+                        }
+
+                        Console.WriteLine("Нажми Enter для продолжения...");
+                        Console.ReadLine();
                         break;
-                    case 4:
+                    case "4":
                         Console.WriteLine("Вы выбрали 4");
-                        Console.WriteLine("Введите число которое хотите удалить");
-                        int removeValue = Convert.ToInt32(Console.Read());
-                        list.Remove(list.Find(removeValue));
+                        Console.Write("Какое число удалить?: ");
+                        if (int.TryParse(Console.ReadLine(), out int delVal))
+                        {
+                            list.Remove(delVal);
+                            Console.WriteLine($"Если число {delVal} было в списке, оно удалено.");
+                        }
+                        Console.WriteLine("Нажми Enter...");
+                        Console.ReadLine();
                         break;
-                    case 5:
+                    case "5":
                         Console.WriteLine("Вы выбрали 5");
-                        UICycle = false;
+                        cycle = false;
+                        break;
+                    default:
+                        Console.WriteLine("\nНет такого пункта! Нажми Enter и попробуйте снова.");
+                        Console.ReadLine(); 
                         break;
                 }
             }
+        }
                 
         }
     }
-}
+
