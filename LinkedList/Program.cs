@@ -12,11 +12,14 @@ namespace LinkedList
             public void AddLast(int data)
             {
                 Node newNode = new Node(data);
-                if (head == null) { head = tail = newNode; return; }
+                if (head == null) { head = tail = newNode; }
+                else
+                {
+                    tail.Next = newNode;
+                    newNode.Previous = tail;
+                    tail = newNode; 
+                }
 
-                tail.Next = newNode;
-                newNode.Previous = tail;
-                tail = newNode;
             }
 
             public void PrintForward()
@@ -80,7 +83,7 @@ namespace LinkedList
                 Console.WriteLine("Введите 4 - чтобы удалить эллемент");
                 Console.WriteLine("Введите 5 - чтобы закрыть программу");
 
-                int choice = Convert.ToInt32(Console.ReadLine());
+                int choice = Convert.ToInt32(Console.Read());
                 Choice = choice;
             }
            
@@ -88,8 +91,8 @@ namespace LinkedList
         public class Node
         {
             public int Data { get; set; }
-            public Node Next { get; set; }
-            public Node Previous { get; set; }
+            public Node Next;
+            public Node Previous; 
             public Node(int data)
             {
                 Data = data;
@@ -119,33 +122,15 @@ namespace LinkedList
                         break;
 
                     case 1:
-                        do
-                        {
-                            Console.WriteLine("Введите 1 для прохода с начала до конца или введите 2 для прохода с конца до начала");
-
-                            int choice = Convert.ToInt32(Console.ReadLine());
-
-                            if (choice == 1)
-                            {
-                                list.PrintForward();
-                                Cycle = false;
-                            }
-
-                            if (choice == 2)
-                            {
-                                list.PrintBackward();
-                                Cycle = false;
-                            }
-
-                            else Console.WriteLine("Неверное число, попробуйте снова");
-
-                        }
-                        while (Cycle == true);
+                        Console.WriteLine("1 - С начала, 2 - С конца");
+                        string choice1 = Console.ReadLine();
+                        if (choice1 == "1") list.PrintForward();
+                        else if (choice1 == "2") list.PrintBackward();
                         break;
                     case 2:
                         Console.WriteLine("Вы выбрали 2");
                         Console.WriteLine("/n Введжите число для поиска в диапазоне от 1 д 100");
-                        int value = Convert.ToInt32(Console.ReadLine());
+                        int value = Convert.ToInt32(Console.Read());
                         if ((value >= 1) && (value <= 100))
                         {
                             if (list.Find(value) != null ) Console.WriteLine("Число найдено в списке");
@@ -156,14 +141,14 @@ namespace LinkedList
                     case 3:
                         Console.WriteLine("Вы выбрали 3");
                         Console.WriteLine("Введите число после которого хотите добавить новый элемент");
-                        int targetValue = Convert.ToInt32(Console.ReadLine());
+                        int targetValue = Convert.ToInt32(Console.Read());
                         list.InsertAfter(list.Find(targetValue), targetValue + 1);
                         Console.WriteLine(list.Find(targetValue).Data + " добавлено после " + targetValue);
                         break;
                     case 4:
                         Console.WriteLine("Вы выбрали 4");
                         Console.WriteLine("Введите число которое хотите удалить");
-                        int removeValue = Convert.ToInt32(Console.ReadLine());
+                        int removeValue = Convert.ToInt32(Console.Read());
                         list.Remove(list.Find(removeValue));
                         break;
                     case 5:
