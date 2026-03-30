@@ -1,13 +1,14 @@
-﻿namespace LinkedList
+﻿using System.Collections;
+
+namespace LinkedList
 {
     internal class Program
     {
         public  class DoublyLinkedList
         {
-            private Node head; // Голова (начало)
-            private Node tail; // Хвост (конец)
+            private Node head; 
+            private Node tail; 
 
-            // Добавление в конец (для удобства наполнения списка)
             public void AddLast(int data)
             {
                 Node newNode = new Node(data);
@@ -18,7 +19,6 @@
                 tail = newNode;
             }
 
-            // 1. Проход в прямом и обратном направлении
             public void PrintForward()
             {
                 Node current = head;
@@ -33,7 +33,6 @@
                 Console.WriteLine();
             }
 
-            // 2. Поиск элемента
             public Node Find(int value)
             {
                 Node current = head;
@@ -45,7 +44,6 @@
                 return null;
             }
 
-            // 3. Добавление ПОСЛЕ заданного
             public void InsertAfter(Node target, int data)
             {
                 if (target == null) return;
@@ -55,27 +53,27 @@
                 newNode.Previous = target;
 
                 if (target.Next != null) target.Next.Previous = newNode;
-                else tail = newNode; // Если добавляем после последнего
+                else tail = newNode; 
 
                 target.Next = newNode;
             }
 
-            // 4. Удаление элемента
             public void Remove(Node target)
             {
                 if (target == null) return;
 
                 if (target.Previous != null) target.Previous.Next = target.Next;
-                else head = target.Next; // Если удаляем голову
+                else head = target.Next; 
 
                 if (target.Next != null) target.Next.Previous = target.Previous;
-                else tail = target.Previous; // Если удаляем хвост
+                else tail = target.Previous; 
             }
         }
         public static class Services { 
             public static int Choice { get; set; }
             public static void Output()
             {
+                Console.WriteLine("Введите 0 - чтобы заполнить список 5-ю слуйчайными эллементами");
                 Console.WriteLine("Введите 1 - чтобы вевести список");
                 Console.WriteLine("Введите 2 - чтобы произвести поиск");
                 Console.WriteLine("Введите 3 - чтобы добавить после эллемента");
@@ -85,11 +83,7 @@
                 int choice = Convert.ToInt32(Console.ReadLine());
                 Choice = choice;
             }
-            public static void Switch()
-            {
-                
-
-            }
+           
         }
         public class Node
         {
@@ -104,16 +98,25 @@
 
         static void Main(string[] args)
         {
+
+            bool UICycle = true;
+            bool Cycle = true;
             DoublyLinkedList list = new DoublyLinkedList();
             Services.Output();
-            while (true)
+            while (UICycle == true)
             {
 
 
-                bool Cycle = true;
-
                 switch (Services.Choice)
                 {
+                    case 0:
+                        Random rng = new Random();
+                        for (int i = 0; i < 5; i++)
+                        {
+                            list.AddLast(rng.Next(1, 100));
+                        }
+                        Console.WriteLine("5 случайных чисел добавлены в список.");
+                        break;
 
                     case 1:
                         do
@@ -124,13 +127,13 @@
 
                             if (choice == 1)
                             {
-
+                                list.PrintForward();
                                 Cycle = false;
                             }
 
                             if (choice == 2)
                             {
-
+                                list.PrintBackward();
                                 Cycle = false;
                             }
 
@@ -141,15 +144,31 @@
                         break;
                     case 2:
                         Console.WriteLine("Вы выбрали 2");
+                        Console.WriteLine("/n Введжите число для поиска в диапазоне от 1 д 100");
+                        int value = Convert.ToInt32(Console.ReadLine());
+                        if ((value >= 1) && (value <= 100))
+                        {
+                            if (list.Find(value) != null ) Console.WriteLine("Число найдено в списке");
+                            else Console.WriteLine("Число не найдено в списке");
+                        }
+                        else Console.WriteLine("Неверное число, попробуйте снова");
                         break;
                     case 3:
                         Console.WriteLine("Вы выбрали 3");
+                        Console.WriteLine("Введите число после которого хотите добавить новый элемент");
+                        int targetValue = Convert.ToInt32(Console.ReadLine());
+                        list.InsertAfter(list.Find(targetValue), targetValue + 1);
+                        Console.WriteLine(list.Find(targetValue).Data + " добавлено после " + targetValue);
                         break;
                     case 4:
                         Console.WriteLine("Вы выбрали 4");
+                        Console.WriteLine("Введите число которое хотите удалить");
+                        int removeValue = Convert.ToInt32(Console.ReadLine());
+                        list.Remove(list.Find(removeValue));
                         break;
                     case 5:
                         Console.WriteLine("Вы выбрали 5");
+                        UICycle = false;
                         break;
                 }
             }
